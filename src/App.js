@@ -10,7 +10,7 @@ import Dasboard from "./components/Dashboard/Dasboard";
 import firebase from "./firebase";
 import {connect} from "react-redux";
 import {setUser} from "./actions/index"
-import Spinner from "./Spinner/Spinner";
+import Spinner from "./components/Spinner/Spinner";
 
 const App = ({history, setUser, rootReducers: {isLoading}}) => {
     useEffect(() => {
