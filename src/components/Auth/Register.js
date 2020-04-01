@@ -38,11 +38,12 @@ const Register = () => {
             //connect firebase with auth register
             firebase.auth().createUserWithEmailAndPassword(valueRegister.email, valueRegister.password).then(createdUser => {
                 console.log(createdUser);
-                //hiển thị ra tên người dùng và random avatar người dùng
+                // lưu username người dùng đã đăng kí vào data và random avatar cho người dùng
                 createdUser.user.updateProfile({
                     displayName: valueRegister.username,
                     photoURL: `http://gravatar.com/avatar/${md5(createdUser.user.email)}?d=identicon`
                 }).then(() => {
+                    // kiểm tra xem lưu người dùng đăng kí thành công hay chưa
                     saveUser(createdUser).then(() => {
                         console.log('user saved')
                     }).catch(err => {
