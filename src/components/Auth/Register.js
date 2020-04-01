@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Grid, Form, Segment, Button, Header, Message, Icon} from "semantic-ui-react"
 import {Link} from "react-router-dom";
 import firebase from "../../firebase";
+import md5 from "md5";
 
 const Register = () => {
     const [valueRegister, setValueRegister] = useState({
@@ -10,7 +11,8 @@ const Register = () => {
         password: "",
         passwordConfirm: "",
         errors: [],
-        loading: false
+        loading: false,
+        usersRef: firebase.database().ref('users')
     })
     let onHandleChange;
     onHandleChange = e => {
@@ -36,9 +38,23 @@ const Register = () => {
             //connect firebase with auth register
             firebase.auth().createUserWithEmailAndPassword(valueRegister.email, valueRegister.password).then(createdUser => {
                 console.log(createdUser);
-                setValueRegister({
-                    ...valueRegister,
-                    loading: false
+                //hiển thị ra tên người dùng và random avatar người dùng
+                createdUser.user.updateProfile({
+                    displayName: valueRegister.username,
+                    photoURL: `http://gravatar.com/avatar/${md5(createdUser.user.email)}?d=identicon`
+                }).then(() => {
+                    saveUser(createdUser).then(() => {
+                        console.log('user saved')
+                    }).catch(err => {
+                        console.log(err)
+                    })
+                }).catch(err => {
+                    console.log(err);
+                    setValueRegister({
+                        ...valueRegister,
+                        errors: valueRegister.errors.concat(err),
+                        loading: false
+                    })
                 })
             }).catch(err => {
                 console.log(err);
@@ -72,6 +88,13 @@ const Register = () => {
         } else {
             return true;
         }
+    }
+    // xử lí lưu dữ liệu người dùng nhập lên data base (tài khoản,avatar....)
+    const saveUser = createdUser => {
+        return valueRegister.usersRef.child(createdUser.user.uid).set({
+            name: createdUser.user.displayName,
+            avatar: createdUser.user.photoURL
+        });
     }
     const isFormEmpty = ({username, email, password, passwordConfirm}) => {
         return !username.length || !email.length || !password.length || !passwordConfirm.length
