@@ -4,9 +4,17 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import 'semantic-ui-css/semantic.min.css'
+import {withRouter} from "react-router";
+import {
+    BrowserRouter as Router
 
+} from "react-router-dom";
+
+const AppWithAuth = withRouter(App);
 ReactDOM.render(
-    <App/>, document.getElementById('root')
+    <Router>
+        <AppWithAuth/>
+    </Router>, document.getElementById('root')
 );
 
 // If you want your app to work offline and load faster, you can change
