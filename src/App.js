@@ -8,15 +8,18 @@ import Register from "./components/Auth/Register";
 import Login from "./components/Auth/Login";
 import Dasboard from "./components/Dashboard/Dasboard";
 import firebase from "./firebase";
+import {connect} from "react-redux";
+import {setUser} from "./actions/index"
 
-const App = ({history}) => {
+const App = ({history, setUser}) => {
     useEffect(() => {
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
+                setUser(user);
                 history.push('/')
             }
         })
-    }, [history])
+    }, [history, setUser])
     return (
 
         <Switch>
@@ -28,4 +31,11 @@ const App = ({history}) => {
     );
 }
 
-export default App;
+const mapDisPatchToProps = (dispatch, props) => {
+    return {
+        setUser: user => {
+            dispatch(setUser((user)))
+        }
+    }
+}
+export default connect(null, mapDisPatchToProps)(App);
