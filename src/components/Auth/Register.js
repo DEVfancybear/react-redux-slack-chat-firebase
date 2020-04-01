@@ -9,7 +9,8 @@ const Register = () => {
         email: "",
         password: "",
         passwordConfirm: "",
-        errors: []
+        errors: [],
+        loading: false
     })
     let onHandleChange;
     onHandleChange = e => {
@@ -27,11 +28,24 @@ const Register = () => {
         console.log("connect success");
         // valid form
         if (isFormValid()) {
+            setValueRegister({
+                ...valueRegister,
+                errors: [],
+                loading: true
+            })
             //connect firebase with auth register
             firebase.auth().createUserWithEmailAndPassword(valueRegister.email, valueRegister.password).then(createdUser => {
                 console.log(createdUser);
+                setValueRegister({
+                    ...valueRegister,
+                    loading: false
+                })
             }).catch(err => {
-                console.log(err)
+                console.log(err);
+                setValueRegister({
+                    ...valueRegister,
+                    loading: false
+                })
             })
         }
     }
@@ -77,13 +91,19 @@ const Register = () => {
     // xử lí hiển thị thông báo form ra màn hình cho người dùng biết
     const displayErrors = errors => errors.map((error, index) => {
         return (
-            <div>
+            <div key={index}>
                 <p key={index}>
                     {error.message}
                 </p>
             </div>
         )
     })
+    // hiển thị khung màu tô đậm vào ô input email để cho người dùng biết răng email đã được dùng/đăng kí từ trước đó (hàm này có thể dùng cho các ô input khác)
+    const handleInputError = (errors, inputName) => {
+        return errors.some(error => error.message.toLowerCase().includes(inputName))
+            ? "error"
+            : "";
+    }
     return (
         <Grid textAlign="center" verticalAlign="middle" className="app">
             <Grid.Column style={{maxWidth: "450px"}}>
@@ -98,24 +118,29 @@ const Register = () => {
                                     placeholder="Username"/>
                         <Form.Input fluid name="email" value={valueRegister.email} onChange={onHandleChange} icon="mail"
                                     iconPosition="left"
+                                    type="email"
+                                    className={handleInputError(valueRegister.errors, "email")}
                                     placeholder="Email"/>
 
                         <Form.Input fluid name="password" value={valueRegister.password} onChange={onHandleChange}
                                     icon="lock" iconPosition="left"
                                     type="password"
+                                    className={handleInputError(valueRegister.errors, "password")}
                                     placeholder="Password"/>
                         <Form.Input fluid name="passwordConfirm" value={valueRegister.passwordConfirm}
                                     onChange={onHandleChange} icon="repeat"
+                                    className={handleInputError(valueRegister.errors, "password")}
                                     iconPosition="left"
                                     type="password"
                                     placeholder="Password Confirm"/>
-                        <Button color="orange" fluid size="large" type="Submit">
+                        <Button disabled={valueRegister.loading} className={valueRegister.loading ? "loading" : ""}
+                                color="orange" fluid size="large" type="Submit">
                             Register Account
                         </Button>
                     </Segment>
                 </Form>
                 {valueRegister.errors.length > 0 && (
-                    <Message>
+                    <Message error>
                         <h3>Error</h3>
                         {displayErrors(valueRegister.errors)}
                     </Message>
