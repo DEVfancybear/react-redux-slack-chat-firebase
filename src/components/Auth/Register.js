@@ -8,7 +8,8 @@ const Register = () => {
         username: "",
         email: "",
         password: "",
-        passwordConfirm: ""
+        passwordConfirm: "",
+        errors: []
     })
     let onHandleChange;
     onHandleChange = e => {
@@ -24,13 +25,65 @@ const Register = () => {
     onSubmit = e => {
         e.preventDefault();
         console.log("connect success");
-        //connect firebase with auth register
-        firebase.auth().createUserWithEmailAndPassword(valueRegister.email, valueRegister.password).then(createdUser => {
-            console.log(createdUser);
-        }).catch(err => {
-            console.log(err)
-        })
+        // valid form
+        if (isFormValid()) {
+            //connect firebase with auth register
+            firebase.auth().createUserWithEmailAndPassword(valueRegister.email, valueRegister.password).then(createdUser => {
+                console.log(createdUser);
+            }).catch(err => {
+                console.log(err)
+            })
+        }
     }
+    // xử lí validate form
+    let isFormValid;
+    isFormValid = () => {
+        let errors = [];
+        let err;
+
+        if (isFormEmpty(valueRegister)) {
+            err = {message: 'Fill in all fields'};
+            setValueRegister({
+                ...valueRegister,
+                errors: errors.concat(err)
+            });
+            return false;
+        } else if (!isPasswordValid(valueRegister)) {
+            err = {message: 'Password is invalid'}
+            setValueRegister({
+                ...valueRegister,
+                errors: errors.concat(err)
+            });
+            return false;
+        } else {
+            return true;
+        }
+    }
+    const isFormEmpty = ({username, email, password, passwordConfirm}) => {
+        return !username.length || !email.length || !password.length || !passwordConfirm.length
+    }
+
+    const isPasswordValid = ({password, passwordConfirm}) => {
+        // kiểm tra độ dài password luôn >= 6
+        if (password.length < 6 || passwordConfirm.length < 6) {
+            return false
+            // kiểm tra password và password xác nhận phải giống nhau thì mới cho submit
+        } else if (password !== passwordConfirm) {
+            return false
+        } else {
+            return true;
+        }
+    }
+    // xử lí hiển thị thông báo form ra màn hình cho người dùng biết
+    const displayErrors = errors => errors.map((error, index) => {
+        return (
+            <div>
+                <p key={index}>
+                    {error.message}
+                </p>
+            </div>
+        )
+    })
     return (
         <Grid textAlign="center" verticalAlign="middle" className="app">
             <Grid.Column style={{maxWidth: "450px"}}>
@@ -61,6 +114,12 @@ const Register = () => {
                         </Button>
                     </Segment>
                 </Form>
+                {valueRegister.errors.length > 0 && (
+                    <Message>
+                        <h3>Error</h3>
+                        {displayErrors(valueRegister.errors)}
+                    </Message>
+                )}
                 <Message>
                     Already a user ? <Link to="/login">Login</Link>
                 </Message>
