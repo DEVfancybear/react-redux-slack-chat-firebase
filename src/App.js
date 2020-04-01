@@ -10,8 +10,9 @@ import Dasboard from "./components/Dashboard/Dasboard";
 import firebase from "./firebase";
 import {connect} from "react-redux";
 import {setUser} from "./actions/index"
+import Spinner from "./Spinner/Spinner";
 
-const App = ({history, setUser}) => {
+const App = ({history, setUser, rootReducers: {isLoading}}) => {
     useEffect(() => {
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
@@ -20,17 +21,22 @@ const App = ({history, setUser}) => {
             }
         })
     }, [history, setUser])
+    if (isLoading === true) {
+        return <Spinner/>
+    }
     return (
-
         <Switch>
             <Route exact path="/" component={Dasboard}/>
             <Route exact path="/register" component={Register}/>
             <Route exact path="/login" component={Login}/>
         </Switch>
-
     );
 }
-
+const mapStateToProps = state => {
+    return {
+        rootReducers: state.rootReducers
+    }
+}
 const mapDisPatchToProps = (dispatch, props) => {
     return {
         setUser: user => {
@@ -38,4 +44,4 @@ const mapDisPatchToProps = (dispatch, props) => {
         }
     }
 }
-export default connect(null, mapDisPatchToProps)(App);
+export default connect(mapStateToProps, mapDisPatchToProps)(App);

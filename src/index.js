@@ -5,10 +5,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import 'semantic-ui-css/semantic.min.css'
 import {withRouter} from "react-router";
-import {
-    BrowserRouter as Router
-
-} from "react-router-dom";
+import {BrowserRouter as Router} from "react-router-dom";
 import {createStore} from "redux";
 import rootReducer from "./reducers/index";
 import {Provider} from "react-redux";
