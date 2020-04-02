@@ -13,7 +13,7 @@ export default (state = initialState, action) => {
             }
         case types.CLEAR_USER:
             return {
-                ...initialState,
+                ...state,
                 isLoading: false
             }
         default:

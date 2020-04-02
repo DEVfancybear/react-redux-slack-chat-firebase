@@ -2,11 +2,11 @@ import React from "react";
 import {Grid, GridColumn, GridRow, Header, HeaderContent, Icon, Dropdown} from "semantic-ui-react";
 import firebase from "../../firebase";
 
-const UserPanel = () => {
+const UserPanel = ({currentUser}) => {
     const dropdownOptions = () => [
         {
             key: "user",
-            text: <span>Signed in as <strong>User</strong></span>,
+            text: <span>Signed in as <strong>{currentUser.displayName}</strong></span>,
             disable: +true
         },
         {
@@ -23,10 +23,9 @@ const UserPanel = () => {
         firebase
             .auth()
             .signOut()
-            .then(() => {
-                console.log('signed out !')
-            })
+            .then(() => console.log("signed out!"));
     }
+
     return (
         <Grid style={{background: "#4c3c4c"}}>
             <GridColumn>
@@ -41,7 +40,7 @@ const UserPanel = () => {
                 {/*User Dropdown*/}
                 <Header style={{padding: "0.2em"}} inverted as="h4">
                     <Dropdown
-                        trigger={<span>User</span>}
+                        trigger={<span>{currentUser.displayName}</span>}
                         options={dropdownOptions()}
                     />
                 </Header>

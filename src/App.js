@@ -17,21 +17,22 @@ const App = ({setUser, rootReducers: {isLoading}, clearUser}) => {
     useEffect(() => {
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
+                console.log(user);
                 setUser(user);
-                history.push("/")
+                history.push("/");
             } else {
                 history.push("/login");
                 clearUser();
             }
-        })
+        });
     }, [setUser, clearUser])
-    if (isLoading === true) {
+    if (isLoading) {
         return <Spinner/>
     }
     return (
         <Switch>
             <Route exact path="/" component={Dasboard}/>
-            <Route path="/register" component={Register}/>
+            <Route  path="/register" component={Register}/>
             <Route path="/login" component={Login}/>
         </Switch>
     );
