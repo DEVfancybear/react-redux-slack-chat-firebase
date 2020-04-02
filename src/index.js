@@ -10,6 +10,7 @@ import {createStore} from "redux";
 import rootReducer from "./reducers/index";
 import {Provider} from "react-redux";
 import {composeWithDevTools} from "redux-devtools-extension";
+import history from './history';
 
 const AppWithAuth = withRouter(App);
 const store = createStore(
@@ -18,7 +19,7 @@ const store = createStore(
 );
 ReactDOM.render(
     <Provider store={store}>
-        <Router>
+        <Router history={history}>
             <AppWithAuth/>
         </Router>
     </Provider>, document.getElementById('root')

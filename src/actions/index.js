@@ -6,3 +6,8 @@ export const setUser = user => {
         payload: user
     }
 }
+export const clearUser = () => {
+    return {
+        type: types.CLEAR_USER
+    }
+}

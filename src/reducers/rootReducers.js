@@ -11,6 +11,11 @@ export default (state = initialState, action) => {
                 ...state, currentUser: action.payload,
                 isLoading: false
             }
+        case types.CLEAR_USER:
+            return {
+                ...initialState,
+                isLoading: false
+            }
         default:
             return state;
     }
