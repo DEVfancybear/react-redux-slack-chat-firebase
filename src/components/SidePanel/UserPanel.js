@@ -1,5 +1,5 @@
 import React from "react";
-import {Grid, GridColumn, GridRow, Header, HeaderContent, Icon, Dropdown} from "semantic-ui-react";
+import {Grid, GridColumn, GridRow, Header, HeaderContent, Icon, Dropdown, Image} from "semantic-ui-react";
 import firebase from "../../firebase";
 
 const UserPanel = ({currentUser}) => {
@@ -40,7 +40,10 @@ const UserPanel = ({currentUser}) => {
                 {/*User Dropdown*/}
                 <Header style={{padding: "0.2em"}} inverted as="h4">
                     <Dropdown
-                        trigger={<span>{currentUser.displayName}</span>}
+                        trigger={<span>
+                            <Image avatar src={currentUser.photoURL} spaced="right"/>
+                            {currentUser.displayName}
+                        </span>}
                         options={dropdownOptions()}
                     />
                 </Header>
