@@ -12,29 +12,79 @@ import {
     ModalActions,
     Button
 } from "semantic-ui-react";
+import firebase from "../../firebase"
 
-const Channels = () => {
-    const [channels, setChannels] = useState([]);
-    const [modal, setModal] = useState(false);
-    const closeModal = () => {
-        setModal(false)
-    };
-    const [form, setForm] = useState({
+const Channels = ({currentUser}) => {
+    const [state, setState] = useState({
+        channels: [],
+        modal: false,
         channelName: "",
-        channelDetails: ""
+        channelDetails: "",
+        channelsRef: firebase.database().ref('channels')
     })
+    const closeModal = () => {
+        setState({
+            ...state,
+            modal: false
+        })
+    };
+
+
     const onHandleChange = e => {
         const target = e.target;
         const name = target.name;
         const value = target.value;
-        setForm({
-            ...form,
+        setState({
+            ...state,
             [name]: value
         })
     }
     const openModal = () => {
-        setModal(true);
+        setState({
+            ...state,
+            modal: true
+        })
     }
+    const handleSubmit = e => {
+        e.preventDefault();
+        //check form valid xem có đủ các trường không
+        if (isFormValid(state)) {
+            // console.log('channel added');
+            addChannel();
+        }
+    }
+    // gửi các trường dữ liệu là các state tương ứng lên firebase
+    const addChannel = () => {
+        const {channelsRef, channelName, channelDetails} = state;
+        const key = channelsRef.push().key;
+        // các trường ở firebase sẽ có các state tương ứng để lưu vào database firebase
+        const newChannel = {
+            id: key,
+            name: channelName,
+            details: channelDetails,
+            createdBy: {
+                name: currentUser.displayName,
+                avatar: currentUser.photoURL
+            }
+        };
+        channelsRef
+            .child(key)
+            .update(newChannel)
+            .then(() => {
+                setState({
+                    ...state,
+                    channelName: "",
+                    channelDetails: ""
+                });
+                closeModal();
+                console.log('channel added');
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+    // ({channelName, channelDetails}) là tham số có tên giống với state để kiểm tra xem form gửi có đủ trường k,nếu k đủ thì sẽ k cho gửi
+    const isFormValid = ({channelName, channelDetails}) => channelName && channelDetails;
     return (
         <Fragment>
             <Menu.Menu style={{paddingBottom: "2em"}}>
@@ -42,10 +92,10 @@ const Channels = () => {
                 <span>
                     <Icon name="exchange"/> CHANNELS
                 </span>
-                    ({channels.length}) <Icon name="add" onClick={openModal}/>
+                    ({state.channels.length}) <Icon name="add" onClick={openModal}/>
                 </MenuItem> {""}
                 {/*Channels*/}
-                <Modal basic open={modal} onClose={closeModal}>
+                <Modal basic open={state.modal} onClose={closeModal}>
                     <ModalHeader>
                         Add a channel
                     </ModalHeader>
@@ -60,7 +110,7 @@ const Channels = () => {
                         </Form>
                     </ModalContent>
                     <ModalActions>
-                        <Button color="green" inverted>
+                        <Button color="green" inverted onClick={handleSubmit}>
                             <Icon name="checkmark"/> Add
                         </Button>
                         <Button color="red" inverted onClick={closeModal}>
