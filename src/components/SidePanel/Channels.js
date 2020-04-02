@@ -1,4 +1,4 @@
-import React, {useState, Fragment} from "react";
+import React, {useState, Fragment, useEffect} from "react";
 import {
     Icon,
     Menu,
@@ -21,7 +21,23 @@ const Channels = ({currentUser}) => {
         channelName: "",
         channelDetails: "",
         channelsRef: firebase.database().ref('channels')
-    })
+    });
+    useEffect(() => {
+        addListeners();
+    }, []);
+    const addListeners = () => {
+        let loadedChannels = [];
+        const {channelsRef} = state;
+        channelsRef.on('child_added', snap => {
+            loadedChannels.push(snap.val());
+            // console.log(loadedChannels)
+            setState({
+                ...state,
+                channels: loadedChannels
+            })
+        })
+
+    }
     const closeModal = () => {
         setState({
             ...state,
@@ -53,6 +69,19 @@ const Channels = ({currentUser}) => {
             addChannel();
         }
     }
+    // hiển thị list channels ra màn hình
+    const displayChannels = channels =>
+        channels.length > 0 &&
+        channels.map(channel => (
+            <MenuItem
+                key={channel.id}
+                onClick={() => console.log(channel)}
+                name={channel.name}
+                style={{opacity: 0.7}}
+            >
+                # {channel.name}
+            </MenuItem>
+        ));
     // gửi các trường dữ liệu là các state tương ứng lên firebase
     const addChannel = () => {
         const {channelsRef, channelName, channelDetails} = state;
@@ -94,7 +123,7 @@ const Channels = ({currentUser}) => {
                 </span>
                     ({state.channels.length}) <Icon name="add" onClick={openModal}/>
                 </MenuItem> {""}
-                {/*Channels*/}
+                {displayChannels(state.channels)}
                 <Modal basic open={state.modal} onClose={closeModal}>
                     <ModalHeader>
                         Add a channel
