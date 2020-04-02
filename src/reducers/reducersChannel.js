@@ -1,20 +1,13 @@
 import * as types from "../constants/ActionTypes";
-
 const initialState = {
-    currentUser: null,
-    isLoading: true
+    currentChannel: null
 }
 export default (state = initialState, action) => {
     switch (action.type) {
-        case types.SET_USER:
-            return {
-                ...state, currentUser: action.payload,
-                isLoading: false
-            }
-        case types.CLEAR_USER:
+        case types.SET_CURRENT_CHANNEL:
             return {
                 ...state,
-                isLoading: false
+                currentChannel: action.payload
             }
         default:
             return state;
