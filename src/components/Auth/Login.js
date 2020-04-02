@@ -92,7 +92,7 @@ const Login = () => {
 
                         <Button disabled={valueRegister.loading} className={valueRegister.loading ? "loading" : ""}
                                 color="violet" fluid size="large" type="Submit">
-                            Register Account
+                            Login Now !
                         </Button>
                     </Segment>
                 </Form>

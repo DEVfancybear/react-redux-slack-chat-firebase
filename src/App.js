@@ -40,7 +40,7 @@ const mapStateToProps = state => {
 const mapDisPatchToProps = (dispatch, props) => {
     return {
         setUser: user => {
-            dispatch(setUser((user)))
+            dispatch(setUser(user))
         }
     }
 }
