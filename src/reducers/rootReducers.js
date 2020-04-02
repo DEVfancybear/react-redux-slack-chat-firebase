@@ -2,7 +2,8 @@ import * as types from "../constants/ActionTypes";
 
 const initialState = {
     currentUser: null,
-    isLoading: true
+    isLoading: true,
+    currentChannel: null
 }
 export default (state = initialState, action) => {
     switch (action.type) {
@@ -15,6 +16,11 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 isLoading: false
+            }
+        case types.SET_CURRENT_CHANNEL:
+            return {
+                ...state,
+                currentChannel: action.payload
             }
         default:
             return state;

@@ -12,9 +12,11 @@ import {
     ModalActions,
     Button
 } from "semantic-ui-react";
-import firebase from "../../firebase"
+import firebase from "../../firebase";
+import {setCurrentChannel} from "../../actions/index";
+import {connect} from "react-redux";
 
-const Channels = ({currentUser}) => {
+const Channels = ({currentUser, setCurrentChannel}) => {
     const [state, setState] = useState({
         channels: [],
         modal: false,
@@ -61,6 +63,10 @@ const Channels = ({currentUser}) => {
             modal: true
         })
     }
+    // khi click vào 1 channel thì sẽ get data của channel đó về
+    const changeChannel = channel => {
+        setCurrentChannel(channel);
+    }
     const handleSubmit = e => {
         e.preventDefault();
         //check form valid xem có đủ các trường không
@@ -75,7 +81,7 @@ const Channels = ({currentUser}) => {
         channels.map(channel => (
             <MenuItem
                 key={channel.id}
-                onClick={() => console.log(channel)}
+                onClick={() => changeChannel(channel)}
                 name={channel.name}
                 style={{opacity: 0.7}}
             >
@@ -151,4 +157,11 @@ const Channels = ({currentUser}) => {
         </Fragment>
     )
 }
-export default Channels
+const mapDispatchToProps = (dispatch, props) => {
+    return {
+        setCurrentChannel: channel => {
+            dispatch(setCurrentChannel(channel))
+        }
+    }
+}
+export default connect(null, mapDispatchToProps)(Channels);
