@@ -23,6 +23,14 @@ class Channels extends Component {
         this.addListeners();
     }
 
+    UNSAFE_componentWillMount() {
+        this.removeListeners();
+    }
+
+    removeListeners = () => {
+        this.state.channelsRef.off();
+    }
+
     addListeners = () => {
         let loadedChannels = [];
         this.state.channelsRef.on("child_added", snap => {
