@@ -3,15 +3,17 @@ import {Segment, Input, Button, ButtonGroup} from "semantic-ui-react";
 import firebase from "../../firebase";
 
 const MessageForm = ({messagesRef, currentChannel, currentUser}) => {
-    const [message, setMessage] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [errors, setErrors] = useState([]);
+    const [state, setState] = useState({
+        message: "",
+        loading: false,
+        errors: []
+    })
     const onHandleChange = e => {
         const target = e.target;
         const name = target.name;
         const value = target.value;
-        setMessage({
-            ...message,
+        setState({
+            ...state,
             [name]: value
         })
     }
@@ -23,29 +25,41 @@ const MessageForm = ({messagesRef, currentChannel, currentUser}) => {
                 name: currentUser.displayName,
                 avatar: currentUser.photoURL
             },
-            content: message
+            content: state.message
         };
         return message;
     }
     const sendMessage = () => {
-        if (message) {
-            setLoading(true);
+        if (state.message) {
+            setState({
+                ...state,
+                loading: true
+            })
             messagesRef
                 .child(currentChannel.id)
                 .push()
                 .set(createMessage())
                 .then(() => {
-                    setLoading(false);
-                    setMessage('');
-                    setErrors([]);
+                    setState({
+                        ...state,
+                        loading: false,
+                        message: '',
+                        errors: []
+                    })
                 })
                 .catch(err => {
                     console.log(err);
-                    setLoading(false);
-                    setErrors(errors.concat(err));
+                    setState({
+                        ...state,
+                        loading: false,
+                        errors: state.errors.concat(err)
+                    })
                 })
         } else {
-            setErrors(errors.concat({message: "Add a message..."}))
+            setState({
+                ...state,
+                errors: state.errors.concat({message: "Add a message ..."})
+            })
         }
     }
     return (
@@ -54,11 +68,12 @@ const MessageForm = ({messagesRef, currentChannel, currentUser}) => {
                 fluid
                 onChange={onHandleChange}
                 name="message"
+                value={state.message}
                 style={{marginBottom: "0.7em"}}
                 label={<Button icon={"add"}/>}
                 labelPosition="left"
                 className={
-                    errors.some(error => error.message.includes("message"))
+                    state.errors.some(error => error.message.includes("message"))
                         ? "error"
                         : ""
                 }
@@ -68,6 +83,7 @@ const MessageForm = ({messagesRef, currentChannel, currentUser}) => {
                 <Button
                     onClick={sendMessage}
                     color="orange"
+                    disabled={state.loading}
                     content="Add Reply"
                     labelPosition="left"
                     icon="edit"
