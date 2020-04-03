@@ -1,10 +1,17 @@
-import React from "react";
+import React, {Fragment} from "react";
+import {Segment, CommentGroup} from "semantic-ui-react"
+import MessagesHeader from "./MessagesHeader";
+import MessageForm from "./MessageForm";
 
 const Messages = () => {
     return (
-        <div>
-            dqsfsfs
-        </div>
+        <Fragment>
+            <MessagesHeader/>
+            <Segment>
+                <CommentGroup className="messages">{/* Messages */}</CommentGroup>
+            </Segment>
+            <MessageForm/>
+        </Fragment>
     )
 }
 
