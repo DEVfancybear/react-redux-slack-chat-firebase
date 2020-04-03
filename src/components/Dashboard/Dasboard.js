@@ -5,13 +5,14 @@ import ColorPanel from "../ColorPanel/ColorPanel";
 import Messages from "../Messages/Messages";
 import MetaPanel from "../MetaPanel/MetaPanel";
 import {connect} from "react-redux";
-const Dasboard = ({rootReducers: {currentUser}}) => {
+
+const Dasboard = ({rootReducers: {currentUser}, reducersChannel: {currentChannel}}) => {
     return (
         <Grid columns="equal" className="app" style={{background: "#eee"}}>
             <ColorPanel/>
-            <SidePanel currentUser={currentUser}/>
+            <SidePanel key={currentUser && currentUser.uid} currentUser={currentUser}/>
             <Grid.Column style={{marginLeft: 320}}>
-                <Messages/>
+                <Messages key={currentChannel && currentChannel.id} currentUser={currentUser} currentChannel={currentChannel}/>
             </Grid.Column>
             <Grid.Column width={4}>
                 <MetaPanel/>
@@ -21,7 +22,8 @@ const Dasboard = ({rootReducers: {currentUser}}) => {
 }
 const mapStateToProps = state => {
     return {
-        rootReducers: state.rootReducers
+        rootReducers: state.rootReducers,
+        reducersChannel: state.reducersChannel
     }
 }
 export default connect(mapStateToProps, null)(Dasboard);
