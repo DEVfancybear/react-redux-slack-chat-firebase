@@ -72,6 +72,11 @@ const MessageForm = ({messagesRef, currentChannel, currentUser}) => {
             })
         }
     }
+
+    const uploadFile = (file, metadata) => {
+        console.log(file, metadata)
+    }
+
     return (
         <Segment className="message__form">
             <Input
@@ -105,7 +110,7 @@ const MessageForm = ({messagesRef, currentChannel, currentUser}) => {
                     labelPosition="right"
                     icon="cloud upload"
                 />
-                <FileModal closeModal={closeModal} modal={state.modal}/>
+                <FileModal uploadFile={uploadFile} closeModal={closeModal} modal={state.modal}/>
             </ButtonGroup>
         </Segment>
     )
