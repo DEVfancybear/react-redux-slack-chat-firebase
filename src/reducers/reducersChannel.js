@@ -1,6 +1,8 @@
 import * as types from "../constants/ActionTypes";
+
 const initialState = {
-    currentChannel: null
+    currentChannel: null,
+    isPrivateChannel: false
 }
 export default (state = initialState, action) => {
     switch (action.type) {
@@ -8,6 +10,11 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 currentChannel: action.payload
+            }
+        case types.SET_PRIVATE_CHANNEL:
+            return {
+                ...state,
+                isPrivateChannel: action.payload
             }
         default:
             return state;

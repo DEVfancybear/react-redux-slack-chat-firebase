@@ -18,3 +18,9 @@ export const setCurrentChannel = channel => {
         payload: channel
     }
 }
+export const setPrivateChannel = isPrivateChannel => {
+    return {
+        type: types.SET_PRIVATE_CHANNEL,
+        payload: isPrivateChannel
+    }
+}
