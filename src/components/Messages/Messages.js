@@ -1,7 +1,7 @@
 import React, {Component} from "react";
-import { Segment, Comment } from "semantic-ui-react";
-import { connect } from "react-redux";
-import { setUserPosts } from "../../actions";
+import {Segment, Comment} from "semantic-ui-react";
+import {connect} from "react-redux";
+import {setUserPosts} from "../../actions";
 import firebase from "../../firebase";
 
 import MessagesHeader from "./MessagesHeader";
@@ -11,28 +11,32 @@ import Typing from "./Typing";
 import Skeleton from "./Skeleton";
 
 class Messages extends Component {
-    state = {
-        privateChannel: this.props.isPrivateChannel,
-        privateMessagesRef: firebase.database().ref("privateMessages"),
-        messagesRef: firebase.database().ref("messages"),
-        messages: [],
-        messagesLoading: true,
-        channel: this.props.currentChannel,
-        isChannelStarred: false,
-        user: this.props.currentUser,
-        usersRef: firebase.database().ref("users"),
-        numUniqueUsers: "",
-        searchTerm: "",
-        searchLoading: false,
-        searchResults: [],
-        typingRef: firebase.database().ref("typing"),
-        typingUsers: [],
-        connectedRef: firebase.database().ref(".info/connected"),
-        listeners: []
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            privateChannel: this.props.isPrivateChannel,
+            privateMessagesRef: firebase.database().ref("privateMessages"),
+            messagesRef: firebase.database().ref("messages"),
+            messages: [],
+            messagesLoading: true,
+            channel: this.props.currentChannel,
+            isChannelStarred: false,
+            user: this.props.currentUser,
+            usersRef: firebase.database().ref("users"),
+            numUniqueUsers: "",
+            searchTerm: "",
+            searchLoading: false,
+            searchResults: [],
+            typingRef: firebase.database().ref("typing"),
+            typingUsers: [],
+            connectedRef: firebase.database().ref(".info/connected"),
+            listeners: []
+        };
+    }
+
 
     componentDidMount() {
-        const { channel, user, listeners } = this.state;
+        const {channel, user, listeners} = this.state;
 
         if (channel && user) {
             this.removeListeners(listeners);
@@ -66,13 +70,13 @@ class Messages extends Component {
         });
 
         if (index === -1) {
-            const newListener = { id, ref, event };
-            this.setState({ listeners: this.state.listeners.concat(newListener) });
+            const newListener = {id, ref, event};
+            this.setState({listeners: this.state.listeners.concat(newListener)});
         }
     };
 
     scrollToBottom = () => {
-        this.messagesEnd.scrollIntoView({ behavior: "smooth" });
+        this.messagesEnd.scrollIntoView({behavior: "smooth"});
     };
 
     addListeners = channelId => {
@@ -88,7 +92,7 @@ class Messages extends Component {
                     id: snap.key,
                     name: snap.val()
                 });
-                this.setState({ typingUsers });
+                this.setState({typingUsers});
             }
         });
         this.addToListeners(channelId, this.state.typingRef, "child_added");
@@ -97,7 +101,7 @@ class Messages extends Component {
             const index = typingUsers.findIndex(user => user.id === snap.key);
             if (index !== -1) {
                 typingUsers = typingUsers.filter(user => user.id !== snap.key);
-                this.setState({ typingUsers });
+                this.setState({typingUsers});
             }
         });
         this.addToListeners(channelId, this.state.typingRef, "child_removed");
@@ -141,13 +145,13 @@ class Messages extends Component {
                 if (data.val() !== null) {
                     const channelIds = Object.keys(data.val());
                     const prevStarred = channelIds.includes(channelId);
-                    this.setState({ isChannelStarred: prevStarred });
+                    this.setState({isChannelStarred: prevStarred});
                 }
             });
     };
 
     getMessagesRef = () => {
-        const { messagesRef, privateMessagesRef, privateChannel } = this.state;
+        const {messagesRef, privateMessagesRef, privateChannel} = this.state;
         return privateChannel ? privateMessagesRef : messagesRef;
     };
 
@@ -206,8 +210,8 @@ class Messages extends Component {
             }
             return acc;
         }, []);
-        this.setState({ searchResults });
-        setTimeout(() => this.setState({ searchLoading: false }), 1000);
+        this.setState({searchResults});
+        setTimeout(() => this.setState({searchLoading: false}), 1000);
     };
 
     countUniqueUsers = messages => {
@@ -219,7 +223,7 @@ class Messages extends Component {
         }, []);
         const plural = uniqueUsers.length > 1 || uniqueUsers.length === 0;
         const numUniqueUsers = `${uniqueUsers.length} user${plural ? "s" : ""}`;
-        this.setState({ numUniqueUsers });
+        this.setState({numUniqueUsers});
     };
 
     countUserPosts = messages => {
@@ -257,10 +261,10 @@ class Messages extends Component {
         users.length > 0 &&
         users.map(user => (
             <div
-                style={{ display: "flex", alignItems: "center", marginBottom: "0.2em" }}
+                style={{display: "flex", alignItems: "center", marginBottom: "0.2em"}}
                 key={user.id}
             >
-                <span className="user__typing">{user.name} is typing</span> <Typing />
+                <span className="user__typing">{user.name} is typing</span> <Typing/>
             </div>
         ));
 
@@ -268,14 +272,14 @@ class Messages extends Component {
         loading ? (
             <React.Fragment>
                 {[...Array(10)].map((_, i) => (
-                    <Skeleton key={i} />
+                    <Skeleton key={i}/>
                 ))}
             </React.Fragment>
         ) : null;
 
     render() {
         // prettier-ignore
-        const { messagesRef, messages, channel, user, numUniqueUsers, searchTerm, searchResults, searchLoading, privateChannel, isChannelStarred, typingUsers, messagesLoading } = this.state;
+        const {messagesRef, messages, channel, user, numUniqueUsers, searchTerm, searchResults, searchLoading, privateChannel, isChannelStarred, typingUsers, messagesLoading} = this.state;
 
         return (
             <React.Fragment>
@@ -296,7 +300,7 @@ class Messages extends Component {
                             ? this.displayMessages(searchResults)
                             : this.displayMessages(messages)}
                         {this.displayTypingUsers(typingUsers)}
-                        <div ref={node => (this.messagesEnd = node)} />
+                        <div ref={node => (this.messagesEnd = node)}/>
                     </Comment.Group>
                 </Segment>
 
@@ -311,6 +315,7 @@ class Messages extends Component {
         );
     }
 }
+
 const mapDispatchToProps = (dispatch, props) => {
     return {
         setUserPosts: userPosts => {

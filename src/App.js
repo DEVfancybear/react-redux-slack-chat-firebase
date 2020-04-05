@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import Register from "./components/Auth/Register";
 import Login from "./components/Auth/Login";
-import Dashboard from "./components/Dashboard/Dasboard";
+import Dashboard from "./components/Dashboard/Dashboard";
 import firebase from "./firebase";
 import {connect} from "react-redux";
 import {setUser, clearUser} from "./actions/index"
