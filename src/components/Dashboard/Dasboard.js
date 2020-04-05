@@ -41,13 +41,15 @@ const Dasboard = ({currentUser, currentChannel, isPrivateChannel, userPosts, pri
     )
 }
 
-const mapStateToProps = state => ({
-    currentUser: state.rootReducers.currentUser,
-    currentChannel: state.reducersChannel.currentChannel,
-    isPrivateChannel: state.reducersChannel.isPrivateChannel,
-    userPosts: state.reducersChannel.userPosts,
-    primaryColor: state.reducersColors.primaryColor,
-    secondaryColor: state.reducersColors.secondaryColor
-});
+const mapStateToProps = state => {
+    return {
+        currentUser: state.rootReducers.currentUser,
+        currentChannel: state.reducersChannel.currentChannel,
+        isPrivateChannel: state.reducersChannel.isPrivateChannel,
+        userPosts: state.reducersChannel.userPosts,
+        primaryColor: state.reducersColors.primaryColor,
+        secondaryColor: state.reducersColors.secondaryColor
+    }
+}
 
 export default connect(mapStateToProps, null)(Dasboard);
