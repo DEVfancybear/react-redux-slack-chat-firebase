@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Component} from "react";
 import { Segment, Comment } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { setUserPosts } from "../../actions";
@@ -10,7 +10,7 @@ import Message from "./Message";
 import Typing from "./Typing";
 import Skeleton from "./Skeleton";
 
-class Messages extends React.Component {
+class Messages extends Component {
     state = {
         privateChannel: this.props.isPrivateChannel,
         privateMessagesRef: firebase.database().ref("privateMessages"),
@@ -311,8 +311,11 @@ class Messages extends React.Component {
         );
     }
 }
-
-export default connect(
-    null,
-    { setUserPosts }
-)(Messages);
+const mapDispatchToProps = (dispatch, props) => {
+    return {
+        setUserPosts: userPosts => {
+            dispatch(setUserPosts(userPosts))
+        }
+    }
+}
+export default connect(null, mapDispatchToProps)(Messages);
