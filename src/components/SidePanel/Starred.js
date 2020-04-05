@@ -10,7 +10,7 @@ const Starred = () => {
     };
     const changeChannel = channel => {
         this.setActiveChannel(channel);
-        this.props.setCurrentChannel(channel);
+        this.props.setCurrentChannel(channel); 
         this.props.setPrivateChannel(false);
     };
     const displayStarred = starredChannels =>

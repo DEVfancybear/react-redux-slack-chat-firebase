@@ -24,3 +24,21 @@ export const setPrivateChannel = isPrivateChannel => {
         payload: isPrivateChannel
     }
 }
+export const setUserPosts = userPosts => {
+    return {
+        type: types.SET_USER_POSTS,
+        payload: userPosts
+
+    };
+};
+
+/* Colors Actions */
+export const setColors = (primaryColor, secondaryColor) => {
+    return {
+        type: types.SET_COLORS,
+        payload: {
+            primaryColor,
+            secondaryColor
+        }
+    };
+};
