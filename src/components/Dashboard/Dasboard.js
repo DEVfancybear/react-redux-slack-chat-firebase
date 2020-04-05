@@ -1,30 +1,53 @@
 import React from "react";
 import {Grid} from "semantic-ui-react";
-import SidePanel from "../SidePanel/SidePanel";
+import {connect} from "react-redux";
 import ColorPanel from "../ColorPanel/ColorPanel";
+import SidePanel from "../SidePanel/SidePanel";
 import Messages from "../Messages/Messages";
 import MetaPanel from "../MetaPanel/MetaPanel";
-import {connect} from "react-redux";
 
-const Dasboard = ({rootReducers: {currentUser}, reducersChannel: {currentChannel, isPrivateChannel}}) => {
+// prettier-ignore
+const Dasboard = ({currentUser, currentChannel, isPrivateChannel, userPosts, primaryColor, secondaryColor}) => {
     return (
-        <Grid columns="equal" className="app" style={{background: "#eee"}}>
-            <ColorPanel/>
-            <SidePanel key={currentUser && currentUser.uid} currentUser={currentUser}/>
+        <Grid columns="equal" className="app" style={{background: secondaryColor}}>
+            <ColorPanel
+                key={currentUser && currentUser.name}
+                currentUser={currentUser}
+            />
+            <SidePanel
+                key={currentUser && currentUser.uid}
+                currentUser={currentUser}
+                primaryColor={primaryColor}
+            />
+
             <Grid.Column style={{marginLeft: 320}}>
-                <Messages key={currentChannel && currentChannel.id} isPrivateChannel={isPrivateChannel}
-                          currentUser={currentUser} currentChannel={currentChannel}/>
+                <Messages
+                    key={currentChannel && currentChannel.id}
+                    currentChannel={currentChannel}
+                    currentUser={currentUser}
+                    isPrivateChannel={isPrivateChannel}
+                />
             </Grid.Column>
+
             <Grid.Column width={4}>
-                <MetaPanel/>
+                <MetaPanel
+                    key={currentChannel && currentChannel.name}
+                    userPosts={userPosts}
+                    currentChannel={currentChannel}
+                    isPrivateChannel={isPrivateChannel}
+                />
             </Grid.Column>
         </Grid>
     )
 }
-const mapStateToProps = state => {
-    return {
-        rootReducers: state.rootReducers,
-        reducersChannel: state.reducersChannel
-    }
-}
+
+const mapStateToProps = state => ({
+    currentUser: state.rootReducers.currentUser,
+    currentChannel: state.reducersChannel.currentChannel,
+    isPrivateChannel: state.reducersChannel.isPrivateChannel,
+    userPosts: state.reducersChannel.userPosts,
+    primaryColor: state.reducersColors.primaryColor,
+    secondaryColor: state.reducersColors.secondaryColor
+});
+
 export default connect(mapStateToProps, null)(Dasboard);
