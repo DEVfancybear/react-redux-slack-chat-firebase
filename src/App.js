@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {Component} from 'react';
 import './App.css';
 import {
     Switch,
@@ -11,35 +11,36 @@ import firebase from "./firebase";
 import {connect} from "react-redux";
 import {setUser, clearUser} from "./actions/index"
 import Spinner from "./components/Spinner/Spinner";
-import history from './history';
 
-const App = ({setUser, rootReducers: {isLoading}, clearUser}) => {
-    useEffect(() => {
+class App extends Component {
+    componentDidMount() {
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
-                console.log(user);
-                setUser(user);
-                history.push("/");
+                // console.log(user);
+                this.props.setUser(user);
+                this.props.history.push("/");
             } else {
-                history.push("/login");
-                clearUser();
+                this.props.history.push("/login");
+                this.props.clearUser();
             }
         });
-    }, [setUser, clearUser])
-    if (isLoading) {
-        return <Spinner/>
     }
-    return (
-        <Switch>
-            <Route exact path="/" component={Dasboard}/>
-            <Route  path="/register" component={Register}/>
-            <Route path="/login" component={Login}/>
-        </Switch>
-    );
+
+    render() {
+        return this.props.isLoading ? (
+            <Spinner />
+        ) : (
+            <Switch>
+                <Route exact path="/" component={Dasboard} />
+                <Route path="/login" component={Login} />
+                <Route path="/register" component={Register} />
+            </Switch>
+        );
+    }
 }
 const mapStateToProps = state => {
     return {
-        rootReducers: state.rootReducers
+        isLoading: state.rootReducers.isLoading
     }
 }
 const mapDisPatchToProps = (dispatch, props) => {
