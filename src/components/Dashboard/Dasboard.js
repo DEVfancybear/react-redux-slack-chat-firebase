@@ -7,7 +7,7 @@ import Messages from "../Messages/Messages";
 import MetaPanel from "../MetaPanel/MetaPanel";
 
 // prettier-ignore
-const Dasboard = ({currentUser, currentChannel, isPrivateChannel, userPosts, primaryColor, secondaryColor}) => {
+const Dashboard = ({currentUser, currentChannel, isPrivateChannel, userPosts, primaryColor, secondaryColor}) => {
     return (
         <Grid columns="equal" className="app" style={{background: secondaryColor}}>
             <ColorPanel
@@ -52,4 +52,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, null)(Dasboard);
+export default connect(mapStateToProps, null)(Dashboard);

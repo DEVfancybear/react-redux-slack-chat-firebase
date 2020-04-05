@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import Register from "./components/Auth/Register";
 import Login from "./components/Auth/Login";
-import Dasboard from "./components/Dashboard/Dasboard";
+import Dashboard from "./components/Dashboard/Dasboard";
 import firebase from "./firebase";
 import {connect} from "react-redux";
 import {setUser, clearUser} from "./actions/index"
@@ -31,7 +31,7 @@ class App extends Component {
             <Spinner />
         ) : (
             <Switch>
-                <Route exact path="/" component={Dasboard} />
+                <Route exact path="/" component={Dashboard} />
                 <Route path="/login" component={Login} />
                 <Route path="/register" component={Register} />
             </Switch>
