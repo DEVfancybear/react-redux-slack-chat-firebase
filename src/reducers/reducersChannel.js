@@ -2,7 +2,8 @@ import * as types from "../constants/ActionTypes";
 
 const initialState = {
     currentChannel: null,
-    isPrivateChannel: false
+    isPrivateChannel: false,
+    userPosts: null
 }
 export default (state = initialState, action) => {
     switch (action.type) {
@@ -16,6 +17,11 @@ export default (state = initialState, action) => {
                 ...state,
                 isPrivateChannel: action.payload
             }
+        case types.SET_USER_POSTS:
+            return {
+                ...state,
+                userPosts: action.payload
+            };
         default:
             return state;
     }
